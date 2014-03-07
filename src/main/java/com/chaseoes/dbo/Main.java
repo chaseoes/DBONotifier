@@ -25,10 +25,12 @@ public class Main {
     public static int projectCount = 0;
     public static int fileCount = 0;
     public static int teamCount = 0;
+    public static int reportCount = 0;
 
     public static boolean nagProjects = true;
     public static boolean nagFiles = false;
     public static boolean nagTeams = false;
+    public static boolean nagReports = false;
 
     public static Nagger nagger;
     public static boolean naggerPaused = false;
@@ -63,6 +65,7 @@ public class Main {
         nagProjects.setState(true);
         CheckboxMenuItem nagFiles = new CheckboxMenuItem("Nag Files");
         CheckboxMenuItem nagTeams = new CheckboxMenuItem("Nag Teams");
+        CheckboxMenuItem nagReports = new CheckboxMenuItem("Nag Reports");
         MenuItem exitItem = new MenuItem("Exit");
 
         popup.add(aboutItem);
@@ -72,6 +75,7 @@ public class Main {
         popup.add(nagProjects);
         popup.add(nagFiles);
         popup.add(nagTeams);
+        popup.add(nagReports);
         popup.addSeparator();
         popup.add(exitItem);
 
@@ -135,6 +139,17 @@ public class Main {
                 }
             }
         });
+        
+        nagReports.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                int cb1Id = e.getStateChange();
+                if (cb1Id == ItemEvent.SELECTED){
+                    Main.nagReports = true;
+                } else {
+                    Main.nagReports = false;
+                }
+            }
+        });
 
         paused.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
@@ -186,6 +201,16 @@ public class Main {
                 }
             }
         }
+        
+        if (Main.nagReports) {
+            if (reportCount > 0) {
+                if (message == null) {
+                    message = "There are " + reportCount + " unclaimed reports.";
+                } else {
+                    message = message.substring(0, message.length() -1) + ", " + reportCount + " reports.";
+                }
+            }
+        }
 
         if (message != null) {
             GeneralUtilities.play("/ding.wav");
@@ -201,10 +226,11 @@ public class Main {
             JsonReader rdr = Json.createReader(is);
             JsonObject obj = rdr.readObject();
             projectCount = Integer.parseInt(obj.get("project_count").toString());
-            fileCount = Integer.parseInt(obj.get("file_count").toString());
+            fileCount = Integer.parseInt(obj.get("unclaimed_file_count").toString());
             // teamCount = Integer.parseInt(obj.get("team_count").toString());
+            reportCount = Integer.parseInt(obj.get("unclaimed_report_count").toString());
 
-            trayIcon.setToolTip("Projects: " + projectCount + " Files: " + fileCount + " Teams: " + teamCount);
+            trayIcon.setToolTip("Projects: " + projectCount + " Files: " + fileCount + " Teams: " + teamCount + " Reports: " + reportCount);
         } catch (Exception e) {
             e.printStackTrace();
         }
