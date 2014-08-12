@@ -229,7 +229,7 @@ public class Main {
             InputStream is = url.openStream();
             JsonReader rdr = Json.createReader(is);
             JsonObject obj = rdr.readObject();
-            projectCount = Integer.parseInt(obj.get("project_count").toString());
+            projectCount = Integer.parseInt(obj.get("unclaimed_project_count").toString());
             fileCount = Integer.parseInt(obj.get("unclaimed_file_count").toString());
             // teamCount = Integer.parseInt(obj.get("team_count").toString());
             reportCount = Integer.parseInt(obj.get("unclaimed_report_count").toString());
