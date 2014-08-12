@@ -24,7 +24,6 @@ public class GeneralUtilities {
     public static void play(String path) {
         try {
             URL url = Main.class.getResource(path);
-            System.out.println(url);
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream( url );
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);

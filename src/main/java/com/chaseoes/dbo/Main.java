@@ -18,7 +18,7 @@ import com.chaseoes.dbo.utilities.GeneralUtilities;
 public class Main {
 
     public static final String hey = "HEY YOU GO AWAY I SEE YOU READING MY CODE";
-    public static final String version = "1.0";
+    public static final String version = "1.1";
     public static final String key = "cc66f137b";
     public static final int refreshTime = 60;
 
@@ -92,7 +92,11 @@ public class Main {
         trayIcon.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    Desktop.getDesktop().browse(new URI("http://dev.bukkit.org/admin/approval-queue/"));
+                    if (projectCount > 0) {
+                        Desktop.getDesktop().browse(new URI("http://beta.chekkit.cbukk.it/projects/oldest"));
+                    } else {
+                        Desktop.getDesktop().browse(new URI("http://dev.bukkit.org/admin/approval-queue/"));
+                    }
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 } catch (URISyntaxException e1) {
@@ -139,7 +143,7 @@ public class Main {
                 }
             }
         });
-        
+
         nagReports.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 int cb1Id = e.getStateChange();
@@ -201,7 +205,7 @@ public class Main {
                 }
             }
         }
-        
+
         if (Main.nagReports) {
             if (reportCount > 0) {
                 if (message == null) {
@@ -221,7 +225,7 @@ public class Main {
     public static void updateCounts(TrayIcon trayIcon) {
         try {
             URL url;
-            url = new URL("http://dbo.chaseoes.com/api/v1/?key=" + key);
+            url = new URL("http://queuebusters.org/api/v1/?key=" + key);
             InputStream is = url.openStream();
             JsonReader rdr = Json.createReader(is);
             JsonObject obj = rdr.readObject();
@@ -230,7 +234,7 @@ public class Main {
             // teamCount = Integer.parseInt(obj.get("team_count").toString());
             reportCount = Integer.parseInt(obj.get("unclaimed_report_count").toString());
 
-            trayIcon.setToolTip("Projects: " + projectCount + " Files: " + fileCount + " Teams: " + teamCount + " Reports: " + reportCount);
+            trayIcon.setToolTip("Projects: " + projectCount + " - Files: " + fileCount + " - Teams: " + teamCount + " - Reports: " + reportCount);
         } catch (Exception e) {
             e.printStackTrace();
         }
